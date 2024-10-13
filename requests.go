@@ -8,25 +8,6 @@ import (
 	"net/http"
 )
 
-func (c *Client) request(
-	ctx context.Context,
-	method string,
-	path string,
-	contentType string,
-	content []byte,
-) (*http.Request, error) {
-	url := c.baseURL + path
-	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewReader(content))
-	if err != nil {
-		return req, err
-	}
-	req.Header.Add(hdrAuthorizationKey, "OAuth "+c.token)
-	if c.userAgent != "" {
-		req.Header.Add(hdrUserAgentKey, c.userAgent)
-	}
-	return req, nil
-}
-
 // Helper function to make HTTP requests
 func (c *Client) makeRequest(ctx context.Context, method, apiEndpoint string, payload []byte) (*http.Response, error) {
 	url := c.baseURL + apiEndpoint
@@ -35,17 +16,21 @@ func (c *Client) makeRequest(ctx context.Context, method, apiEndpoint string, pa
 		return nil, err
 	}
 
-	// Set headers
+	req.Header.Set(hdrHostKey, c.baseURL)
 	req.Header.Set(hdrAuthorizationKey, "OAuth "+c.token)
-	req.Header.Set("X-Cloud-Org-ID", c.XCloudOrgID)
-	if method == "POST" || method == "PUT" {
-		req.Header.Set("Content-Type", "application/json")
+	if c.xCloudOrgID != "" {
+		req.Header.Set(hdrXCloudOrgIDKey, c.xCloudOrgID)
 	}
-
+	if c.xOrgID != "" {
+		req.Header.Set(hdrXCloudOrgIDKey, c.xOrgID)
+	}
 	if c.userAgent != "" {
 		req.Header.Add(hdrUserAgentKey, c.userAgent)
 	}
-	// Perform the actual HTTP request
+	if method == methodPost || method == methodPut {
+		req.Header.Set(hdrContentType, jsonContentType)
+	}
+
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err

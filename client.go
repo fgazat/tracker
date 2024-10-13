@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	defaultBaseUrl = "https://api.tracker.yandex.net/v2"
+	defaultBaseUrl = "https://api.tracker.yandex.net"
 
 	methodGet     = "GET"
 	methodPost    = "POST"
@@ -15,17 +15,13 @@ const (
 	methodPatch   = "PATCH"
 	methodHead    = "HEAD"
 	methodOptions = "OPTIONS"
-)
 
-var (
-	hdrUserAgentKey       = http.CanonicalHeaderKey("User-Agent")
-	hdrAcceptKey          = http.CanonicalHeaderKey("Accept")
-	hdrContentTypeKey     = http.CanonicalHeaderKey("Content-Type")
-	hdrContentLengthKey   = http.CanonicalHeaderKey("Content-Length")
-	hdrContentEncodingKey = http.CanonicalHeaderKey("Content-Encoding")
-	hdrLocationKey        = http.CanonicalHeaderKey("Location")
-	hdrAuthorizationKey   = http.CanonicalHeaderKey("Authorization")
-	hdrWwwAuthenticateKey = http.CanonicalHeaderKey("WWW-Authenticate")
+	hdrHostKey          = "Host"
+	hdrAuthorizationKey = "Authorization"
+	hdrXCloudOrgIDKey   = "X-Cloud-Org-ID"
+	hdrXOrgIDKey        = "X-Org-ID"
+	hdrUserAgentKey     = "User-Agent"
+	hdrContentType      = "Content-Type"
 
 	plainTextType   = "text/plain; charset=utf-8"
 	jsonContentType = "application/json"
@@ -36,8 +32,8 @@ type Client struct {
 	baseURL     string
 	token       string
 	client      http.Client
-	XCloudOrgID string
-	XOrgID      string
+	xCloudOrgID string
+	xOrgID      string
 
 	userAgent string
 	debug     bool
@@ -59,16 +55,6 @@ func New(token string, opts ...Option) *Client {
 
 type Option func(*Client)
 
-func WithRetries(count int) Option {
-	return func(c *Client) {
-	}
-}
-
-func WithRetriesCondition(f func()) Option {
-	return func(c *Client) {
-	}
-}
-
 func WithBaseURL(baseURL string) Option {
 	return func(c *Client) {
 		c.baseURL = baseURL
@@ -77,13 +63,13 @@ func WithBaseURL(baseURL string) Option {
 
 func WithXCloudOrgID(s string) Option {
 	return func(c *Client) {
-		c.XCloudOrgID = s
+		c.xCloudOrgID = s
 	}
 }
 
 func WithXOrgID(s string) Option {
 	return func(c *Client) {
-		c.XOrgID = s
+		c.xOrgID = s
 	}
 }
 
@@ -95,5 +81,15 @@ func WithLogger(l *log.Logger) Option {
 func WithDebug(d bool) Option {
 	return func(c *Client) {
 		c.debug = true
+	}
+}
+
+func WithRetries(count int) Option {
+	return func(c *Client) {
+	}
+}
+
+func WithRetriesCondition(f func()) Option {
+	return func(c *Client) {
 	}
 }

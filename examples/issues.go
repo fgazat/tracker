@@ -18,7 +18,9 @@ type IssueWithLocalFields struct {
 func main() {
 	token := os.Getenv("TRACKER_TOKEN")
 	orgID := os.Getenv("XCLOUD_ORG_ID")
+
 	client := tracker.New(token, tracker.WithXCloudOrgID(orgID))
+
 	var issue IssueWithLocalFields
 	err := client.GetIssueByKey(context.Background(), "TEST-1", &issue)
 	if err != nil {

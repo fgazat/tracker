@@ -7,8 +7,10 @@ import (
 	"net/url"
 )
 
+// Gets Issue by key
+// https://yandex.cloud/en/docs/tracker/concepts/issues/get-issue
 func (c *Client) GetIssueByKey(ctx context.Context, key string, result any) error {
-	url := fmt.Sprintf("/issues/%s", key)
+	url := fmt.Sprintf("/v2/issues/%s", key)
 	r, err := c.makeRequest(ctx, methodGet, url, nil)
 	if err != nil {
 		return err
