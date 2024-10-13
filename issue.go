@@ -2,6 +2,7 @@ package tracker
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/url"
@@ -33,4 +34,17 @@ func (c *Client) GetIssues(ctx context.Context, params url.Values, result any) e
 
 func (c *Client) GetIssuesByQuery(ctx context.Context, query string, result any) error {
 	return c.GetIssues(ctx, url.Values{"query": []string{query}}, result)
+}
+
+func (c *Client) CreateIsueeAny(ctx context.Context, payload, result any) error {
+	url := "/v2/issues"
+	v, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("can't marshal to json: %v", err)
+	}
+	resp, err := c.makeRequest(ctx, methodPost, url, v)
+	if err != nil {
+		return err
+	}
+	return handleResponse(resp, result)
 }
