@@ -1,14 +1,5 @@
-# Yandex Tracker API client for Go (WIP)
+package main
 
-## Install
-
-```
-go get github.com/fgazat/tracker
-```
-
-## Usage
-
-```go
 import (
 	"context"
 	"log"
@@ -36,9 +27,3 @@ func main() {
 	log.Printf("URL: %s", issue.PullRequestURL)
 	log.Printf("Issue: %+v", issue)
 }
-```
-
-
-## License
-
-This client is [MIT licensed](./LICENSE).

@@ -6,15 +6,15 @@ import (
 )
 
 const (
-	defaultBaseUrl = "https://api.tracker.yandex.net"
+	defaultBaseUrl = "https://api.tracker.yandex.net/v2"
 
-	MethodGet     = "GET"
-	MethodPost    = "POST"
-	MethodPut     = "PUT"
-	MethodDelete  = "DELETE"
-	MethodPatch   = "PATCH"
-	MethodHead    = "HEAD"
-	MethodOptions = "OPTIONS"
+	methodGet     = "GET"
+	methodPost    = "POST"
+	methodPut     = "PUT"
+	methodDelete  = "DELETE"
+	methodPatch   = "PATCH"
+	methodHead    = "HEAD"
+	methodOptions = "OPTIONS"
 )
 
 var (
@@ -33,15 +33,17 @@ var (
 )
 
 type Client struct {
-	baseURL string
-	token   string
-	client  http.Client
+	baseURL     string
+	token       string
+	client      http.Client
+	XCloudOrgID string
+	XOrgID      string
 
 	userAgent string
 	debug     bool
 }
 
-func NewClient(token string, opts ...Option) *Client {
+func New(token string, opts ...Option) *Client {
 	c := &Client{
 		baseURL: defaultBaseUrl,
 		token:   token,
@@ -70,6 +72,18 @@ func WithRetriesCondition(f func()) Option {
 func WithBaseURL(baseURL string) Option {
 	return func(c *Client) {
 		c.baseURL = baseURL
+	}
+}
+
+func WithXCloudOrgID(s string) Option {
+	return func(c *Client) {
+		c.XCloudOrgID = s
+	}
+}
+
+func WithXOrgID(s string) Option {
+	return func(c *Client) {
+		c.XOrgID = s
 	}
 }
 
