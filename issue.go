@@ -3,6 +3,7 @@ package tracker
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/url"
 )
 
@@ -18,9 +19,18 @@ func (c *Client) GetIssueByKey(ctx context.Context, key string, result any) erro
 }
 
 func (c *Client) GetIssues(ctx context.Context, params url.Values, result any) error {
-	return nil
+	url := "/v2/issues/"
+	if len(params) != 0 {
+		url += "?" + params.Encode()
+	}
+	log.Println(url)
+	resp, err := c.makeRequest(ctx, methodGet, url, nil)
+	if err != nil {
+		return err
+	}
+	return handleResponse(resp, result)
 }
 
 func (c *Client) GetIssuesByQuery(ctx context.Context, query string, result any) error {
-	return nil
+	return c.GetIssues(ctx, url.Values{"query": []string{query}}, result)
 }
