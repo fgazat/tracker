@@ -3,6 +3,7 @@ package tracker
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -39,25 +40,16 @@ func (c *Client) makeRequest(ctx context.Context, method, apiEndpoint string, pa
 }
 
 // Helper function to handle and print responses
-func handleResponse(resp *http.Response, successStatusCodes []int) error {
+func handleResponse(resp *http.Response, result any) error {
 	defer resp.Body.Close()
-
-	// Check if the status code is within the successful status codes
-	isSuccess := false
-	for _, code := range successStatusCodes {
-		if resp.StatusCode == code {
-			isSuccess = true
-			break
-		}
-	}
-
-	if isSuccess {
-		bodyBytes, _ := io.ReadAll(resp.Body)
-		fmt.Println("Response: ", string(bodyBytes))
-	} else {
+	if resp.StatusCode >= 300 {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("request failed, status code: %d, response: %s", resp.StatusCode, string(bodyBytes))
 	}
-
+	if result != nil {
+		if err := json.NewDecoder(resp.Body).Decode(result); err != nil {
+			return err
+		}
+	}
 	return nil
 }

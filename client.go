@@ -80,16 +80,6 @@ func WithLogger(l *log.Logger) Option {
 
 func WithDebug(d bool) Option {
 	return func(c *Client) {
-		c.debug = true
-	}
-}
-
-func WithRetries(count int) Option {
-	return func(c *Client) {
-	}
-}
-
-func WithRetriesCondition(f func()) Option {
-	return func(c *Client) {
+		c.debug = d
 	}
 }
