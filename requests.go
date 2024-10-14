@@ -16,7 +16,6 @@ func (c *Client) makeRequest(ctx context.Context, method, apiEndpoint string, pa
 	if err != nil {
 		return nil, err
 	}
-
 	req.Header.Set(hdrHostKey, c.baseURL)
 	req.Header.Set(hdrAuthorizationKey, "OAuth "+c.token)
 	if c.xCloudOrgID != "" {

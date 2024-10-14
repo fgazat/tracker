@@ -73,6 +73,12 @@ func WithXOrgID(s string) Option {
 	}
 }
 
+func WithUserAgent(s string) Option {
+	return func(c *Client) {
+		c.userAgent = s
+	}
+}
+
 func WithLogger(l *log.Logger) Option {
 	return func(c *Client) {
 	}
