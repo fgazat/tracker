@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/url"
 )
 
@@ -24,7 +23,6 @@ func (c *Client) GetIssues(ctx context.Context, params url.Values, result any) e
 	if len(params) != 0 {
 		url += "?" + params.Encode()
 	}
-	log.Println(url)
 	resp, err := c.makeRequest(ctx, methodGet, url, nil)
 	if err != nil {
 		return err
